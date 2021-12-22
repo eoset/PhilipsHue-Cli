@@ -10,19 +10,18 @@ using PhilipsHue.Cli.Models;
 
 namespace PhilipsHue.Cli.Handlers
 {
-    using Microsoft.Extensions.Configuration;
-
     public class LightHandler
     {
         private readonly HttpClient _httpClient;
         private List<Light> Lights = new List<Light>();
 
-        public LightHandler(IConfiguration configuration)
+        public LightHandler(Settings settings)
         {
-            var bridgeIp = configuration.GetSection("HueBrideIP").Value;
-            var userId = configuration.GetSection("HueUserId").Value;
+            //var bridgeIp = configuration.GetSection("HueBrideIP").Value;
+            //var userId = configuration.GetSection("HueUserId").Value;
+            //
 
-            _httpClient = CreateClient(bridgeIp, userId);
+            _httpClient = CreateClient(settings.HueBrideIp, settings.HueUserId);
         }
 
         private HttpClient CreateClient(string bridgeIp, string userId)
@@ -103,6 +102,4 @@ namespace PhilipsHue.Cli.Handlers
             public bool @on { get; set; }
         }
     }
-
-
 }

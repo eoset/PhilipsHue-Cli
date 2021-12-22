@@ -1,20 +1,28 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using PhilipsHue.Cli.Handlers;
-
-IConfiguration configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
 
 try
 {
-
     if (!args.Any())
         throw new Exception("No arguments set. Type help for see list of arguments");
 
-    LightHandler lightHandler = new LightHandler(configuration);
+    var settingsHandler = new SettingsHandler();
+    var settings = settingsHandler.GetSettings();
+
+    if(settings == null)
+    {
+        settings = new Settings();
+        Console.WriteLine("Enter IP-Address of Hue Bridge");
+        settings.HueBrideIp = Console.ReadLine();
+
+        Console.WriteLine("Enter User Id");
+        settings.HueUserId = Console.ReadLine();
+
+        settingsHandler.SaveSettings(settings);
+    }
+
+    LightHandler lightHandler = new LightHandler(settingsHandler.Settings);
 
     switch (args[0])
     {
@@ -26,6 +34,9 @@ try
             Console.WriteLine("\t- lights");
             Console.WriteLine("\t- <light name/id> on");
             Console.WriteLine("\t- <light name/id> off");
+            break;
+        case "clear":
+            settingsHandler.Clear();
             break;
         default:
             if (args.Length == 1)
