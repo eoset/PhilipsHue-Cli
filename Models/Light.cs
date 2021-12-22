@@ -1,12 +1,12 @@
-﻿using System.Runtime.Serialization;
-using Newtonsoft.Json.Converters;
-
-namespace PhilipsHue.Cli;
-
-[DataContract]
-public class Light
+﻿namespace PhilipsHue.Cli.Models
 {
-  public string Id { get; set; }
+  using System;
+  using System.Runtime.Serialization;
+
+  [DataContract]
+  public class Light
+  {
+    public string Id { get; set; }
 
     [DataMember(Name = "state")]
     public State State { get; set; }
@@ -175,3 +175,4 @@ public class Light
     [EnumMember(Value = "unknown")]
     Unknown
   }
+}
